@@ -1,8 +1,8 @@
 import torch
 import numpy as np
-#import cv2
 from torchvision import transforms
-from PIL import Image
+from PIL import Image, ImageFilter
+import matplotlib.cm as cm
 
 # =========================
 # Image preprocessing
@@ -38,17 +38,24 @@ def fake_predict():
 # Fake explainability (heatmap)
 # =========================
 def fake_explainability(image):
-    image = np.array(image).astype(np.float32) / 255.0
-    h, w, _ = image.shape
+    # Convert image to numpy
+    image_np = np.array(image).astype(np.float32) / 255.0
+    h, w, _ = image_np.shape
 
-    heatmap = np.random.rand(h, w)
-    heatmap = cv2.GaussianBlur(heatmap, (51, 51), 0)
-    heatmap = (heatmap - heatmap.min()) / (heatmap.max() - heatmap.min())
+    # Fake attention map
+    heatmap = np.random.rand(h, w).astype(np.float32)
 
-    heatmap = cv2.applyColorMap(
-        np.uint8(255 * heatmap),
-        cv2.COLORMAP_JET
-    )
+    # Gaussian blur using PIL (no OpenCV)
+    heatmap_img = Image.fromarray(np.uint8(heatmap * 255))
+    heatmap_img = heatmap_img.filter(ImageFilter.GaussianBlur(radius=25))
+    heatmap = np.array(heatmap_img) / 255.0
 
-    overlay = 0.6 * image + 0.4 * (heatmap / 255.0)
+    # Apply colormap using matplotlib
+    colormap = cm.get_cmap("jet")
+    heatmap_color = colormap(heatmap)[:, :, :3]
+
+    # Overlay
+    overlay = 0.6 * image_np + 0.4 * heatmap_color
+    overlay = np.clip(overlay, 0, 1)
+
     return overlay

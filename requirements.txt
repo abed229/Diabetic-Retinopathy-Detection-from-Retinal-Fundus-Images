@@ -1,7 +1,8 @@
-python-3.10
 torch
 torchvision
 grad-cam
-streamlit
-Pillow
-opencv-python-headless==4.8.1.78
+streamlit==1.28.0
+Pillow==10.1.0
+matplotlib
+opencv-python-headless
+
