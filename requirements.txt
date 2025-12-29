@@ -2,6 +2,5 @@ torch
 torchvision
 grad-cam
 streamlit==1.28.0
-Pillow==10.1.0
+Pillow==9.5.0
 matplotlib
-
