@@ -3,4 +3,4 @@ torchvision
 grad-cam
 streamlit
 Pillow
-opencv-python-headless==4.8.1.78
+opencv-python-headless
