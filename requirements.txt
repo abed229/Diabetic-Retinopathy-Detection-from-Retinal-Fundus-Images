@@ -1,7 +1,11 @@
-streamlit
+
+numpy
+opencv-python
+matplotlib  
+scikit-learn
+
 torch
 torchvision
-numpy
-pillow
-opencv-python
-matplotlib
+grad-cam
+streamlit
+Pillow
