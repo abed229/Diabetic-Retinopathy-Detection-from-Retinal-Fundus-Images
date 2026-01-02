@@ -1,8 +1,8 @@
+python_version == "3.12.*"
 torch
 torchvision
-pytorch-grad-cam
+git+https://github.com/jacobgil/pytorch-grad-cam.git
+pillow
+numpy
+matplotlib
 streamlit
-Pillow
-matplotlib
-pytorch-grad-cam
-matplotlib
