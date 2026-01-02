@@ -1,6 +1,6 @@
 torch
 torchvision
-pytorch-grad-cam>=1.4.6
+pytorch-grad-cam
 streamlit
 Pillow
 matplotlib
