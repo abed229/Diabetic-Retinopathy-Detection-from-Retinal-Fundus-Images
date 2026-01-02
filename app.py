@@ -1,8 +1,9 @@
 import streamlit as st
 from PIL import Image
 import numpy as np
+import torch
 
-from utils import preprocess_image, fake_predict, fake_explainability
+from utils_old import load_model, predict, preprocess_image, gradcam_explainability
 
 # =========================
 # Page config
@@ -12,6 +13,23 @@ st.set_page_config(
     page_icon="👁️",
     layout="wide"
 )
+
+# =========================
+# Device
+# =========================
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# =========================
+# Load model (cached)
+# =========================
+@st.cache_resource
+def get_model():
+    model = load_model()
+    model.to(device)
+    model.eval()
+    return model
+
+model = get_model()
 
 # =========================
 # Custom CSS
@@ -69,19 +87,19 @@ else:
 # =========================
 # Prediction pipeline
 # =========================
-if image:
+if image is not None:
     col1, col2 = st.columns(2)
 
     with col1:
         st.subheader("📷 Input Image")
-        st.image(image, use_container_width=True, clamp=True)
+        st.image(image, use_container_width=True)
 
     with col2:
         st.subheader("🧠 Model Prediction")
 
         with st.spinner("Analyzing image..."):
-            _ = preprocess_image(image)  # ready for real model
-            result = fake_predict()
+            img_tensor = preprocess_image(image).to(device)
+            result = predict(model, img_tensor)
 
         st.markdown(
             f"""
@@ -99,15 +117,22 @@ if image:
             st.progress(float(v), text=f"{k} ({v*100:.1f}%)")
 
     # =========================
-    # Explainability
+    # Explainability (Grad-CAM)
     # =========================
     if show_explain:
         st.markdown("---")
-        st.subheader("🔥 Explainability (visual attention)")
+        st.subheader("🔥 Explainability (Grad-CAM)")
 
-        heatmap_img = fake_explainability(image)
+        original_image = np.array(image).astype(np.float32) / 255.0
+
+        cam_image = gradcam_explainability(
+            model,
+            img_tensor,
+            original_image
+        )
+
         st.image(
-            heatmap_img,
+            cam_image,
             caption="Highlighted regions influencing the prediction",
             use_container_width=True
         )
