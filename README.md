@@ -23,6 +23,8 @@ requirements.txt        # Dependencies
 
 resnet50_weight_best_model.pth  # Trained model weights
 README.md               # Project documentation
+
+
 **Installation**
 git clone https://github.com/your-username/your-repo.git
 cd your-repo
@@ -36,7 +38,7 @@ python main.py
 Or launch the app interface:
 
 python app.py
-** Model**
+**Model**
 
 **Architecture: ResNet50**
 
