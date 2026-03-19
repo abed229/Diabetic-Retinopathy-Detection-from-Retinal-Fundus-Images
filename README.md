@@ -38,6 +38,8 @@ python main.py
 Or launch the app interface:
 
 python app.py
+
+
 **Model**
 
 **Architecture: ResNet50**
